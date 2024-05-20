@@ -4,7 +4,7 @@ CWD = os.getcwd()
 
 class FileManager:
     def __init__(self):
-        self.filenames = filter(lambda f: f.endswith(".txt"), os.listdir(CWD))
+        self.filenames = list(filter(lambda f: f.endswith(".txt"), os.listdir(CWD)))
         
         # Contiene la cantidad de archivos diarios o por semana
         # que se han creado
