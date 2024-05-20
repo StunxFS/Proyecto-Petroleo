@@ -21,7 +21,7 @@ class FileManager:
     def obtener_archivo_semanal(self, mode="a"):
         if self.archivo_s_actual:
             return self.archivo_s_actual
-        self.archivo_s_actual = open(self.filenames[-1], mode)
+        self.archivo_s_actual = open(f"Universidad\\Datos_semanal_{self.contador}.txt", mode)
         return self.archivo_s_actual
     
     # Devuelve el objeto del archivo actual con el que estamos
