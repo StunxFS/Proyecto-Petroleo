@@ -31,7 +31,7 @@ class FileManager:
         if self.archivo_d_actual:
             return self.archivo_d_actual
         self.archivo_d_actual = open(self.filenames[-1], mode)
-        if len(self.archivo_d_actual.readlines()) >= 160:
+        if self.es_fin_de_semana():
             self.archivo_d_actual.close()
             self.archivo_d_actual = open(f"Universidad\\Datos_diarios_{self.contador}.txt", mode)
             self.contador += 1
