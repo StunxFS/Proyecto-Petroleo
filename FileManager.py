@@ -33,8 +33,8 @@ class FileManager:
         self.archivo_d_actual = open(self.filenames[-1], mode)
         if self.es_fin_de_semana():
             self.archivo_d_actual.close()
-            self.archivo_d_actual = open(f"Universidad\\Datos_diarios_{self.contador}.txt", mode)
             self.contador += 1
+            self.archivo_d_actual = open(f"Universidad\\Datos_diarios_{self.contador}.txt", mode)
         return self.archivo_d_actual
     
     def es_fin_de_semana(self):
