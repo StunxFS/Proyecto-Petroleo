@@ -49,6 +49,8 @@ class FileManager:
     
     def es_fin_de_semana(self):
         return len(self.archivo_d_actual.readlines()) >= 160
+        
+GestArch = FileManager()
 
 class PozoPetrolero:
     def __init__(self):
@@ -63,7 +65,7 @@ class PozoPetrolero:
         return self.__capacidad_tanque
         
     def informe_capacidad_tanque(self):
-        with open(f"Universidad\\Datos_diarios_{GestArch.contador}.txt", "a") as archivo:
+        with GestArch.obtener_archivo_diario() as archivo:
             archivo.writelines(f"DATOS DIARIOS:\n\n- Limite de los tanques:\n{self.get_capacidad_tanque()[0]}")
         print(f"- Capacidad del tanque: {self.get_capacidad_tanque()[0]}")
         
@@ -74,7 +76,7 @@ class PozoPetrolero:
         return self.__cantidad_tanques   
     
     def informe_cantidad_tanques(self):
-        with open(f"Universidad\\Datos_diarios_{GestArch.contador}.txt", "a") as archivo:
+        with GestArch.obtener_archivo_diario() as archivo:
             archivo.writelines(f"\n- Cantidad de los tanques:\n{self.get_cantidad_tanques()[0]}")
         print(f"- Cantidad tanques: {self.get_cantidad_tanques()[0]}")
         
@@ -85,7 +87,7 @@ class PozoPetrolero:
         return self.__horas_trabajadas
         
     def informe_horas_trabajadas(self):
-        with open(f"Universidad\\Datos_diarios_{GestArch.contador}.txt", "a") as archivo:
+        with GestArch.obtener_archivo_diario() as archivo:
             archivo.writelines(f"\n- Horas trabajadas:\n{self.get_horas_trabajadas()[0]}")
         print(f"- Horas trabajadas: {self.get_horas_trabajadas()[0]}")
         
@@ -101,7 +103,7 @@ class Produccion:
         return self.__fecha_produccion_diaria
         
     def informe_fecha_produccion_diaria(self):
-        with open(f"Universidad\\Datos_diarios_{GestArch.contador}.txt", "a") as archivo:
+        with GestArch.obtener_archivo_diario() as archivo:
             archivo.writelines(f"\n- Fecha:\n{self.get_fecha_produccion_diaria()[0]}")
         print(f"- Fecha: {self.get_fecha_produccion_diaria()[0]}")
     
@@ -110,18 +112,18 @@ class Produccion:
         return produccion_diaria
     
     def informe_produccion_diaria(self):
-        with open(f"Universidad\\Datos_diarios_{GestArch.contador}.txt", "a") as archivo:
+        with GestArch.obtener_archivo_diario() as archivo:
             archivo.writelines(f"\n- Producción diaria:\n{self.c_produccion_diaria()}")
         print(f"- Producción diaria: {self.c_produccion_diaria()}")
         
     def c_produccion_semanal(self):
         
-        with open(f"Universidad\\Datos_diarios_{GestArch.contador}.txt", "r") as archivo:
+        with GestArch.obtener_archivo_diario() as archivo:
             lineas = archivo.readlines()
             linea_especifica = lineas[11]
             linea1 = linea_especifica.strip()
             
-        with open(f"Universidad\\Datos_diarios_{GestArch.contador}.txt", "r") as archivo:
+        with GestArch.obtener_archivo_diario() as archivo:
             lineas = archivo.readlines()
             linea_especifica = lineas[34]
             linea2 = linea_especifica.strip()
@@ -353,8 +355,7 @@ while True:
     print("3) Salir")
     print("------------------------------")
     opcion = int(input("Opción: "))
-
-    GestArch = FileManager()
+    
     Pozo = PozoPetrolero()
     Prod = Produccion(Pozo)
     Val = Valor()
@@ -364,10 +365,7 @@ while True:
 
     if opcion == 1:
         
-        archivo = open(f"Universidad\\Datos_diarios_{GestArch.contador}.txt", "a")
-        archivo.close()
-        
-        with open(f"Universidad\\Datos_diarios_{GestArch.contador}.txt", "r") as f:
+        with GestArch.obtener_archivo_diario() as f:
             lineas = f.readlines()
             
             if len(lineas) >= 160:
@@ -377,9 +375,7 @@ while True:
                 archivo = open(f"Universidad\\contador.txt", "w")
                 archivo.writelines(caracter)
                 archivo.close()
-                input("¡Ya has completado una semana!\nPresiona Enter para continuar...")
-                archivo = open(f"Universidad\\Datos_diarios_{caracter}.txt", "a")
-                archivo.close()
+                input("¡Ya has completado una semana!\nPresiona Enter para continuar...")¿
                 
             else:
         
