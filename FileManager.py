@@ -18,7 +18,7 @@ class FileManager:
     
     # Devuelve el objeto del archivo actual con el que estamos
     # trabajando los datos semanales.
-    def obtener_archivo_semanal(self, mode="a"):
+    def obtener_archivo_semanal(self, mode="w+"):
         if self.archivo_s_actual:
             return self.archivo_s_actual
         self.archivo_s_actual = open(f"Universidad\\Datos_semanal_{self.contador}.txt", mode)
@@ -27,7 +27,7 @@ class FileManager:
     # Devuelve el objeto del archivo actual con el que estamos
     # trabajando los datos diarios. Si el archivo supera las
     # 160 líneas, se crea un nuevo archivo y se devuelve ese.
-    def obtener_archivo_diario(self, mode="a"):
+    def obtener_archivo_diario(self, mode="w+"):
         if self.archivo_d_actual:
             return self.archivo_d_actual
         self.archivo_d_actual = open(self.filenames[-1], mode)
@@ -39,3 +39,7 @@ class FileManager:
     
     def es_fin_de_semana(self):
         return len(self.archivo_d_actual.readlines()) >= 160
+
+    def close(self):
+        self.archivo_d_actual.close()
+        self.archivo_s_actual.close()

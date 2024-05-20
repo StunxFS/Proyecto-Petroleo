@@ -28,7 +28,7 @@ class FileManager:
     
     # Devuelve el objeto del archivo actual con el que estamos
     # trabajando los datos semanales.
-    def obtener_archivo_semanal(self, mode="a"):
+    def obtener_archivo_semanal(self, mode="w+"):
         if self.archivo_s_actual:
             return self.archivo_s_actual
         self.archivo_s_actual = open(f"Universidad\\Datos_semanal_{self.contador}.txt", mode)
@@ -37,10 +37,13 @@ class FileManager:
     # Devuelve el objeto del archivo actual con el que estamos
     # trabajando los datos diarios. Si el archivo supera las
     # 160 líneas, se crea un nuevo archivo y se devuelve ese.
-    def obtener_archivo_diario(self, mode="a"):
+    def obtener_archivo_diario(self, mode="w+"):
         if self.archivo_d_actual:
             return self.archivo_d_actual
-        self.archivo_d_actual = open(self.filenames[-1], mode)
+        if len(self.filenames) > 0:
+            self.archivo_d_actual = open(self.filenames[-1], mode)
+        else:
+            self.archivo_d_actual = open(f"Universidad\\Datos_diarios_{self.contador}.txt", mode)
         if self.es_fin_de_semana():
             self.archivo_d_actual.close()
             self.contador += 1
@@ -65,8 +68,8 @@ class PozoPetrolero:
         return self.__capacidad_tanque
         
     def informe_capacidad_tanque(self):
-        with GestArch.obtener_archivo_diario() as archivo:
-            archivo.writelines(f"DATOS DIARIOS:\n\n- Limite de los tanques:\n{self.get_capacidad_tanque()[0]}")
+        archivo = GestArch.obtener_archivo_diario()
+        archivo.writelines(f"DATOS DIARIOS:\n\n- Limite de los tanques:\n{self.get_capacidad_tanque()[0]}")
         print(f"- Capacidad del tanque: {self.get_capacidad_tanque()[0]}")
         
     def set_cantidad_tanques(self, can_tanques):
@@ -76,8 +79,8 @@ class PozoPetrolero:
         return self.__cantidad_tanques   
     
     def informe_cantidad_tanques(self):
-        with GestArch.obtener_archivo_diario() as archivo:
-            archivo.writelines(f"\n- Cantidad de los tanques:\n{self.get_cantidad_tanques()[0]}")
+        archivo = GestArch.obtener_archivo_diario()
+        archivo.writelines(f"\n- Cantidad de los tanques:\n{self.get_cantidad_tanques()[0]}")
         print(f"- Cantidad tanques: {self.get_cantidad_tanques()[0]}")
         
     def set_horas_trabajadas(self, hrs_trabajadas):
@@ -87,8 +90,8 @@ class PozoPetrolero:
         return self.__horas_trabajadas
         
     def informe_horas_trabajadas(self):
-        with GestArch.obtener_archivo_diario() as archivo:
-            archivo.writelines(f"\n- Horas trabajadas:\n{self.get_horas_trabajadas()[0]}")
+        archivo = GestArch.obtener_archivo_diario()
+        archivo.writelines(f"\n- Horas trabajadas:\n{self.get_horas_trabajadas()[0]}")
         print(f"- Horas trabajadas: {self.get_horas_trabajadas()[0]}")
         
 class Produccion:
@@ -103,8 +106,8 @@ class Produccion:
         return self.__fecha_produccion_diaria
         
     def informe_fecha_produccion_diaria(self):
-        with GestArch.obtener_archivo_diario() as archivo:
-            archivo.writelines(f"\n- Fecha:\n{self.get_fecha_produccion_diaria()[0]}")
+        archivo = GestArch.obtener_archivo_diario()
+        archivo.writelines(f"\n- Fecha:\n{self.get_fecha_produccion_diaria()[0]}")
         print(f"- Fecha: {self.get_fecha_produccion_diaria()[0]}")
     
     def c_produccion_diaria(self):
@@ -112,21 +115,19 @@ class Produccion:
         return produccion_diaria
     
     def informe_produccion_diaria(self):
-        with GestArch.obtener_archivo_diario() as archivo:
-            archivo.writelines(f"\n- Producción diaria:\n{self.c_produccion_diaria()}")
+        archivo = GestArch.obtener_archivo_diario()
+        archivo.writelines(f"\n- Producción diaria:\n{self.c_produccion_diaria()}")
         print(f"- Producción diaria: {self.c_produccion_diaria()}")
         
     def c_produccion_semanal(self):
-        
-        with GestArch.obtener_archivo_diario() as archivo:
-            lineas = archivo.readlines()
-            linea_especifica = lineas[11]
-            linea1 = linea_especifica.strip()
-            
-        with GestArch.obtener_archivo_diario() as archivo:
-            lineas = archivo.readlines()
-            linea_especifica = lineas[34]
-            linea2 = linea_especifica.strip()
+        archivo = GestArch.obtener_archivo_diario()
+        lineas = archivo.readlines()
+
+        linea_especifica = lineas[11]
+        linea1 = linea_especifica.strip()
+
+        linea_especifica = lineas[34]
+        linea2 = linea_especifica.strip()
             
         with open(f"Universidad\\Datos_diarios_{GestArch.contador}.txt", "r") as archivo:
             lineas = archivo.readlines()
@@ -365,80 +366,80 @@ while True:
 
     if opcion == 1:
         
-        with GestArch.obtener_archivo_diario() as f:
-            lineas = f.readlines()
-            
-            if len(lineas) >= 160:
-                
-                suma = int(GestArch.contador) + 1
-                caracter = str(suma)
-                archivo = open(f"Universidad\\contador.txt", "w")
-                archivo.writelines(caracter)
-                archivo.close()
-                input("¡Ya has completado una semana!\nPresiona Enter para continuar...")¿
-                
-            else:
+        f = GestArch.obtener_archivo_diario()
+        lineas = f.readlines()
         
-                print("-------------------------")
-                print(" DATOS - POZO PETROLERO ")
-                print("-------------------------")
-                cap_tanque = float(input("Ingrese la capacidad de los tanques: "))
-                Pozo.set_capacidad_tanque(cap_tanque)
-                can_tanques = int(input("Ingrese la cantidad de los tanques: "))
-                Pozo.set_cantidad_tanques(can_tanques)
-                hrs_trabajadas = int(input("Ingrese las horas trabajadas: "))
-                Pozo.set_horas_trabajadas(hrs_trabajadas)
-                
-                print("-------------------------")
-                print("DATOS - DÍA DE PRODUCCIÓN")
-                print("-------------------------")
-                ano = int(input("Ingrese el año: "))
-                mes = int(input("Ingrese el mes: "))
-                dia = int(input("Ingrese el día: "))
-                fecha_produccion_diaria = date(ano, mes, dia)
-                Prod.set_fecha_produccion_diaria(fecha_produccion_diaria)
-                
-                print("-------------------------")
-                print("      DATOS - VALOR")
-                print("-------------------------")
-                ano = int(input("Ingrese el año: "))
-                mes = int(input("Ingrese el mes: "))
-                dia = int(input("Ingrese el día: "))
-                fecha_valor_actual = date(ano, mes, dia)
-                Val.set_fecha_actual(fecha_valor_actual)
-                precio_actual_barril = float(input("Ingrese el precio actual del barril: "))
-                Val.set_precio_actual_barril(precio_actual_barril)
-                
-                print("-------------------------")
-                print("   DATOS - OPERACIONES")
-                print("-------------------------")
-                manten = float(input("Ingrese el costo del mantenimiento diario: "))
-                suminis = float(input("Ingrese el costo de los suministros diarios: "))
-                personal = float(input("Ingrese el costo personal diario: "))
-                Op.set_manten_diario(manten)
-                Op.set_suminis_diario(suminis)
-                Op.set_personal_diario(personal)
-                
-                print("-------------------------")
-                print("       RESULTADOS")
-                print("-------------------------")
-                
-                Pozo.informe_capacidad_tanque()
-                Pozo.informe_cantidad_tanques()
-                Pozo.informe_horas_trabajadas()
-                
-                Prod.informe_fecha_produccion_diaria()
-                Prod.informe_produccion_diaria()
-                
-                Val.informe_fecha_actual()
-                Val.informe_precio_barril_actual()
-                
-                Op.informe_costo_total_diario()
-                Op.informe_precio_venta_diario_barril()
-                
-                Ven.informe_ingreso_diario()
-                
-                input("Presiona una tecla para continuar...")
+        if len(lineas) >= 160:
+            
+            suma = int(GestArch.contador) + 1
+            caracter = str(suma)
+            archivo = open(f"Universidad\\contador.txt", "w")
+            archivo.writelines(caracter)
+            archivo.close()
+            input("¡Ya has completado una semana!\nPresiona Enter para continuar...")
+            
+        else:
+    
+            print("-------------------------")
+            print(" DATOS - POZO PETROLERO ")
+            print("-------------------------")
+            cap_tanque = float(input("Ingrese la capacidad de los tanques: "))
+            Pozo.set_capacidad_tanque(cap_tanque)
+            can_tanques = int(input("Ingrese la cantidad de los tanques: "))
+            Pozo.set_cantidad_tanques(can_tanques)
+            hrs_trabajadas = int(input("Ingrese las horas trabajadas: "))
+            Pozo.set_horas_trabajadas(hrs_trabajadas)
+            
+            print("-------------------------")
+            print("DATOS - DÍA DE PRODUCCIÓN")
+            print("-------------------------")
+            ano = int(input("Ingrese el año: "))
+            mes = int(input("Ingrese el mes: "))
+            dia = int(input("Ingrese el día: "))
+            fecha_produccion_diaria = date(ano, mes, dia)
+            Prod.set_fecha_produccion_diaria(fecha_produccion_diaria)
+            
+            print("-------------------------")
+            print("      DATOS - VALOR")
+            print("-------------------------")
+            ano = int(input("Ingrese el año: "))
+            mes = int(input("Ingrese el mes: "))
+            dia = int(input("Ingrese el día: "))
+            fecha_valor_actual = date(ano, mes, dia)
+            Val.set_fecha_actual(fecha_valor_actual)
+            precio_actual_barril = float(input("Ingrese el precio actual del barril: "))
+            Val.set_precio_actual_barril(precio_actual_barril)
+            
+            print("-------------------------")
+            print("   DATOS - OPERACIONES")
+            print("-------------------------")
+            manten = float(input("Ingrese el costo del mantenimiento diario: "))
+            suminis = float(input("Ingrese el costo de los suministros diarios: "))
+            personal = float(input("Ingrese el costo personal diario: "))
+            Op.set_manten_diario(manten)
+            Op.set_suminis_diario(suminis)
+            Op.set_personal_diario(personal)
+            
+            print("-------------------------")
+            print("       RESULTADOS")
+            print("-------------------------")
+            
+            Pozo.informe_capacidad_tanque()
+            Pozo.informe_cantidad_tanques()
+            Pozo.informe_horas_trabajadas()
+            
+            Prod.informe_fecha_produccion_diaria()
+            Prod.informe_produccion_diaria()
+            
+            Val.informe_fecha_actual()
+            Val.informe_precio_barril_actual()
+            
+            Op.informe_costo_total_diario()
+            Op.informe_precio_venta_diario_barril()
+            
+            Ven.informe_ingreso_diario()
+            
+            input("Presiona una tecla para continuar...")
         
     elif opcion == 2:
         
@@ -461,6 +462,7 @@ while True:
                 
     elif opcion == 3:
         print("Finalizando programa...")
+        GestArch.close()
         break
     
     else:
