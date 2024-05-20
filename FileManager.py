@@ -1,8 +1,8 @@
 import os
 
+CWD = os.getcwd()
+
 class FileManager:
-    CWD = os.getcwd()
-    
     def __init__(self):
         self.filenames = filter(lambda f: f.endswith(".txt"), os.listdir(CWD))
         
